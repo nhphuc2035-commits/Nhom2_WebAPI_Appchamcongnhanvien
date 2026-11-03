@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html lang='vi'>
+<head>
+    <meta charset='utf-8'/>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
+    <title>Báo Cáo Chấm Công &amp; Lương - Bùi Quốc Huy</title>
+    <style>
+        body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; line-height: 1.6; color: #1e293b; margin: 0; padding: 24px; background-color: #f1f5f9; }
+        .container { max-width: 780px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); border: 1px solid #e2e8f0; }
+        .banner { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%); color: #ffffff; padding: 28px 32px; }
+        .banner-tag { display: inline-block; background: rgba(255,255,255,0.16); padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 10px; }
+        .banner h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.3px; }
+        .banner p { margin: 6px 0 0 0; opacity: 0.85; font-size: 13.5px; }
+        .content { padding: 28px 32px; }
+        .info-grid { width: 100%; border-collapse: collapse; margin-bottom: 24px; background: #f8fafc; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; }
+        .info-grid td { padding: 10px 14px; font-size: 13.5px; border-bottom: 1px solid #e2e8f0; }
+        .info-grid tr:last-child td { border-bottom: none; }
+        .info-label { font-weight: 600; color: #64748b; width: 32%; background: #f1f5f9; }
+        .info-value { font-weight: 600; color: #0f172a; }
+        .kpi-table { width: 100%; border-collapse: separate; border-spacing: 10px 0; margin: 0 -10px 24px -10px; }
+        .kpi-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; text-align: center; width: 25%; }
+        .kpi-card.highlight { background: #ecfdf5; border-color: #a7f3d0; }
+        .kpi-num { font-size: 18px; font-weight: 800; color: #0f172a; }
+        .kpi-card.highlight .kpi-num { color: #047857; }
+        .kpi-label { font-size: 11.5px; color: #64748b; margin-top: 4px; }
+        .salary-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; }
+        .salary-box h3 { margin: 0 0 12px 0; font-size: 15px; color: #0f172a; }
+        .salary-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13.5px; border-bottom: 1px dashed #e2e8f0; }
+        .salary-row:last-child { border-bottom: none; font-weight: 800; font-size: 15px; color: #047857; padding-top: 10px; }
+        table.records { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        table.records th { background-color: #0f172a; color: #ffffff; padding: 10px 12px; text-align: left; font-weight: 600; }
+        table.records td { padding: 9px 12px; border-bottom: 1px solid #e2e8f0; }
+        table.records tr:nth-child(even) { background-color: #f8fafc; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+        .badge-manual { background-color: #fef3c7; color: #92400e; }
+        .badge-auto { background-color: #dcfce7; color: #166534; }
+        .footer { background: #f8fafc; padding: 18px 32px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='banner'>
+            <div class='banner-tag'>Phiếu Báo Cáo Điện Tử</div>
+            <h1>BÁO CÁO CHẤM CÔNG &amp; BẢNG LƯƠNG CÁ NHÂN</h1>
+            <p>Kỳ báo cáo: <strong>Tháng 10/2026</strong> &bull; Ngày xuất: 26/10/2026 09:17</p>
+        </div>
+        <div class='content'>
+            <table class='info-grid'>
+                <tr>
+                    <td class='info-label'>Họ và tên nhân viên</td>
+                    <td class='info-value'>Bùi Quốc Huy</td>
+                    <td class='info-label'>Phòng ban</td>
+                    <td class='info-value'>Phòng Kỹ Thuật</td>
+                </tr>
+                <tr>
+                    <td class='info-label'>Chức vụ</td>
+                    <td class='info-value'>Kỹ sư DevOps</td>
+                    <td class='info-label'>Email</td>
+                    <td class='info-value'>huy.bui@company.com</td>
+                </tr>
+            </table>
+
+            <table class='kpi-table'>
+                <tr>
+                    <td class='kpi-card'>
+                        <div class='kpi-num'>5 ngày</div>
+                        <div class='kpi-label'>Số ngày có mặt</div>
+                    </td>
+                    <td class='kpi-card'>
+                        <div class='kpi-num'>41,75h</div>
+                        <div class='kpi-label'>Tổng giờ làm</div>
+                    </td>
+                    <td class='kpi-card'>
+                        <div class='kpi-num'>1,75h</div>
+                        <div class='kpi-label'>Giờ tăng ca (OT)</div>
+                    </td>
+                    <td class='kpi-card highlight'>
+                        <div class='kpi-num'>4.049.375 đ</div>
+                        <div class='kpi-label'>Tổng lương thực nhận</div>
+                    </td>
+                </tr>
+            </table>
+
+            <div class='salary-box'>
+                <h3>Chi tiết cách tính lương trong kỳ</h3>
+                <table style='width:100%; border-collapse:collapse; font-size:13.5px;'>
+                    <tr>
+                        <td style='padding:6px 0; color:#475569;'>1. Giờ làm tiêu chuẩn (&le; 8h/ngày): <strong>40 giờ</strong> &times; 95.000 đ/giờ</td>
+                        <td style='padding:6px 0; text-align:right; font-weight:700;'>3.800.000 VNĐ</td>
+                    </tr>
+                    <tr>
+                        <td style='padding:6px 0; color:#475569;'>2. Giờ làm tăng ca OT (&gt; 8h/ngày): <strong>1,75 giờ</strong> &times; 95.000 đ/giờ &times; hệ số 1,5</td>
+                        <td style='padding:6px 0; text-align:right; font-weight:700; color:#d97706;'>249.375 VNĐ</td>
+                    </tr>
+                    
+                    <tr style='border-top:1px solid #cbd5e1;'>
+                        <td style='padding:10px 0 2px 0; font-weight:800; font-size:15px; color:#0f172a;'>TỔNG LƯƠNG THỰC LĨNH</td>
+                        <td style='padding:10px 0 2px 0; text-align:right; font-weight:800; font-size:16px; color:#047857;'>4.049.375 VNĐ</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3 style='font-size: 15px; color: #0f172a; margin: 0 0 8px 0;'>Bảng kê chi tiết các ngày chấm công (01/10/2026 - 31/10/2026)</h3>
+            <table class='records'>
+                <thead>
+                    <tr>
+                        <th>Ngày</th>
+                        <th>Giờ vào</th>
+                        <th>Giờ về</th>
+                        <th>Tổng giờ</th>
+                        <th>Phương thức</th>
+                        <th>Ghi chú</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>13/10/2026</strong></td>
+                        <td>08:00:00</td>
+                        <td>17:30:00</td>
+                        <td style='font-weight: 700;'>8,5h</td>
+                        <td><span class='badge badge-auto'>Vân tay</span></td>
+                        <td style='color:#64748b;'>Xác thực vân tay trên thiết bị di động</td>
+                    </tr>
+                    <tr>
+                        <td><strong>14/10/2026</strong></td>
+                        <td>08:15:00</td>
+                        <td>17:15:00</td>
+                        <td style='font-weight: 700;'>8h</td>
+                        <td><span class='badge badge-auto'>Vân tay</span></td>
+                        <td style='color:#64748b;'>Xác thực vân tay trên thiết bị di động</td>
+                    </tr>
+                    <tr>
+                        <td><strong>15/10/2026</strong></td>
+                        <td>08:00:00</td>
+                        <td>18:00:00</td>
+                        <td style='font-weight: 700;'>9h</td>
+                        <td><span class='badge badge-auto'>Vân tay</span></td>
+                        <td style='color:#64748b;'>Xác thực vân tay trên thiết bị di động</td>
+                    </tr>
+                    <tr>
+                        <td><strong>16/10/2026</strong></td>
+                        <td>08:05:00</td>
+                        <td>17:05:00</td>
+                        <td style='font-weight: 700;'>8h</td>
+                        <td><span class='badge badge-auto'>Vân tay</span></td>
+                        <td style='color:#64748b;'>Xác thực vân tay trên thiết bị di động</td>
+                    </tr>
+                    <tr>
+                        <td><strong>17/10/2026</strong></td>
+                        <td>08:00:00</td>
+                        <td>17:15:00</td>
+                        <td style='font-weight: 700;'>8,25h</td>
+                        <td><span class='badge badge-auto'>Vân tay</span></td>
+                        <td style='color:#64748b;'>Xác thực vân tay trên thiết bị di động</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class='footer'>
+            Báo cáo được tạo tự động từ Hệ thống Quản trị Nhân sự &amp; Chấm công Sinh trắc học Doanh nghiệp.<br/>
+            Nếu có sai sót về số giờ làm việc, vui lòng liên hệ Quản lý trực tiếp hoặc Phòng Nhân sự để được đối soát.
+        </div>
+    </div>
+</body>
+</html>

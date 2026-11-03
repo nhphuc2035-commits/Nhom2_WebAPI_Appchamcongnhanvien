@@ -1,0 +1,9 @@
+{
+  "SmtpServer": "smtp.gmail.com",
+  "SmtpPort": 587,
+  "SenderName": "Hệ thống Nhân sự & Chấm công",
+  "SenderEmail": "fup3569@gmail.com",
+  "Username": "fup3569@gmail.com",
+  "Password": "lfok lcvv rpur hklk",
+  "EnableSsl": true
+}

@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOVA CORP — Hệ Thống Quản Trị Nhân Sự &amp; Chấm Công Doanh Nghiệp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/css/styles.css?v=20261027_05" />
+  <style>
+    .admin-only { display: none !important; }
+    body.role-admin .admin-only { display: inline-flex !important; }
+  </style>
+  <script>
+    window.toggleSidebarMenu = function() {
+      var isMobile = window.innerWidth <= 768;
+      var sidebar = document.getElementById('sidebar');
+      var icon = document.getElementById('sidebarToggleIcon');
+      if (isMobile) {
+        var isOpen = sidebar.classList.toggle('open');
+        document.body.classList.toggle('sidebar-mobile-open', isOpen);
+      } else {
+        var isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+        localStorage.setItem('biowork_sidebar_collapsed', isCollapsed ? '1' : '0');
+        if (icon) {
+          icon.className = isCollapsed ? 'ri-menu-unfold-line' : 'ri-menu-2-line';
+        }
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      try {
+        if (window.innerWidth > 768 && localStorage.getItem('biowork_sidebar_collapsed') === '1') {
+          document.body.classList.add('sidebar-collapsed');
+          var icon = document.getElementById('sidebarToggleIcon');
+          if (icon) icon.className = 'ri-menu-unfold-line';
+        }
+      } catch(e) {}
+    });
+  </script>
+</head>
+<body>
+
+  <!-- ==================== MÀN HÌNH ĐĂNG NHẬP ==================== -->
+  <div id="loginView" class="login-wrapper">
+    <div class="login-shell">
+      <div class="login-hero">
+        <div>
+          <div class="brand-badge">
+            <div class="brand-icon"><i class="ri-building-4-line"></i></div>
+            <div>
+              <div style="font-weight:800; font-size:17px; letter-spacing:-0.3px;">CÔNG TY CỔ PHẦN NOVA CORP</div>
+              <div style="font-size:11.5px; color:#38bdf8; font-weight:600;">Enterprise HR &amp; Shift Attendance Portal</div>
+            </div>
+          </div>
+          <h1>Hệ Thống Quản Trị Nhân Sự, Phân Ca &amp; Chấm Công</h1>
+          <p>Nền tảng quản trị tập trung dành cho Ban Giám đốc (Admin) và Quản lý (Manager): phân công ca làm việc chặt chẽ, giám sát điểm danh thời gian thực, chấm công thủ công, tính lương tự động theo chức vụ và gửi báo cáo qua Email.</p>
+
+          <div class="feature-pills">
+            <div class="feature-pill"><i class="ri-time-line"></i> Phân chia 4 ca làm việc chuẩn (Hành chính, Sáng, Chiều, Tăng ca Tối)</div>
+            <div class="feature-pill"><i class="ri-calendar-check-line"></i> Ghi nhận giờ vào/ra chính xác &amp; Quản lý chấm công thủ công</div>
+            <div class="feature-pill"><i class="ri-money-dollar-circle-line"></i> Tính lương Tuần / Tháng theo chức vụ (Tách giờ chuẩn &le; 8h &amp; OT x1.5)</div>
+            <div class="feature-pill"><i class="ri-bar-chart-grouped-line"></i> Báo cáo thống kê Tuần / Tháng / Quý / Năm &amp; Gửi Email HTML</div>
+          </div>
+        </div>
+        <div style="font-size:12px; color:#64748b; display:flex; justify-content:space-between; align-items:center;">
+          <span><i class="ri-shield-check-line" style="color:#10b981;"></i> Bảo mật JWT Bearer &amp; Android Hardware Keystore</span>
+          <a href="/swagger" target="_blank" style="color:#38bdf8; text-decoration:none; font-weight:600;">Swagger API <i class="ri-external-link-line"></i></a>
+        </div>
+      </div>
+
+      <div class="login-panel">
+        <h2>Đăng Nhập Quản Trị</h2>
+        <p class="sub">Dành cho Admin &amp; Quản lý doanh nghiệp (Nhân viên điểm danh trên App di động)</p>
+
+        <form id="loginForm" onsubmit="App.handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label">Email hoặc Tên tài khoản</label>
+            <div class="input-box">
+              <i class="ri-user-3-line prefix"></i>
+              <input type="text" id="loginUsername" class="form-control" placeholder="Nhập email hoặc tên tài khoản..." value="admin" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mật khẩu</label>
+            <div class="input-box">
+              <i class="ri-lock-password-line prefix"></i>
+              <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" value="Admin@123456" required />
+            </div>
+          </div>
+
+          <div id="loginError" class="hidden" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.35); color:#fca5a5; padding:10px 13px; border-radius:10px; font-size:12.5px; margin-bottom:14px;"></div>
+
+          <button type="submit" id="loginBtn" class="btn btn-primary" style="width:100%; padding:12px; font-size:14px; margin-top:4px;">
+            <i class="ri-login-circle-line"></i> Đăng Nhập Dashboard
+          </button>
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== GIAO DIỆN DASHBOARD CHÍNH ==================== -->
+  <div id="appView" class="app-layout hidden">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon"><i class="ri-building-4-line"></i></div>
+        <div>
+          <div class="sidebar-title">NOVA CORP</div>
+          <div class="sidebar-sub">Quản Trị Nhân Sự</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Điều hành &amp; Thống kê</div>
+        <button class="nav-item active" data-tab="dashboard" onclick="App.switchTab('dashboard')">
+          <i class="ri-dashboard-3-line"></i> <span>Tổng Quan &amp; Biểu Đồ</span>
+        </button>
+        <button class="nav-item" data-tab="attendance" onclick="App.switchTab('attendance')">
+          <i class="ri-calendar-check-line"></i> <span>Giám Sát Ca &amp; Chấm Công Bù</span>
+        </button>
+
+        <div class="nav-section-title">Quản trị Nhân sự &amp; Lương</div>
+        <button class="nav-item" data-tab="employees" onclick="App.switchTab('employees')">
+          <i class="ri-team-line"></i> <span>Nhân Viên &amp; Quản Lý</span>
+        </button>
+        <button class="nav-item" data-tab="salary" onclick="App.switchTab('salary')">
+          <i class="ri-money-dollar-circle-line"></i> <span>Tính Lương Tuần / Tháng</span>
+        </button>
+        <button class="nav-item" data-tab="reports" onclick="App.switchTab('reports')">
+          <i class="ri-file-chart-line"></i> <span>Báo Cáo &amp; Gửi Email</span>
+        </button>
+
+        <div class="nav-section-title">Tích hợp kỹ thuật</div>
+        <a href="/swagger" target="_blank" class="nav-item" style="text-decoration:none;">
+          <i class="ri-code-s-slash-line"></i> <span>Tài Liệu Swagger API</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-mini">
+          <div id="userAvatar" class="avatar-circle">A</div>
+          <div style="min-width:0; flex:1;">
+            <div id="userFullName" style="font-weight:700; font-size:13px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Quản Trị Viên</div>
+            <div id="userRoleBadge" style="font-size:11px; color:#38bdf8;">Admin</div>
+          </div>
+        </div>
+        <button class="btn btn-danger btn-sm" style="width:100%;" onclick="App.logout()" title="Đăng xuất">
+          <i class="ri-logout-box-r-line"></i> <span>Đăng xuất</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- SIDEBAR BACKDROP (MOBILE) -->
+    <div id="sidebarBackdrop" class="sidebar-backdrop" onclick="window.toggleSidebarMenu()"></div>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div style="display:flex; align-items:center; gap:14px;">
+          <button id="sidebarToggleBtn" class="btn btn-outline btn-icon" onclick="window.toggleSidebarMenu()" title="Thu nhỏ / Mở rộng thanh điều hướng">
+            <i id="sidebarToggleIcon" class="ri-menu-2-line"></i>
+          </button>
+          <div class="topbar-left">
+            <h2 id="pageTitle">Tổng Quan Hệ Thống</h2>
+            <p id="pageSubtitle">Giám sát thời gian thực tình hình nhân sự, điểm danh vân tay và quỹ lương</p>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="clock-pill" style="display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#059669;" title="Tự động đồng bộ thời gian thực mỗi 3.5s với App Mobile">
+            <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#10B981;"></span>
+            <span style="font-size:12px; font-weight:700;">Đồng Bộ Realtime</span>
+          </div>
+          <div class="clock-pill">
+            <i class="ri-time-line"></i>
+            <span id="liveClock">--:--:--</span>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="App.openManualModal()">
+            <i class="ri-edit-box-line"></i> Chấm Công Thủ Công
+          </button>
+          <button class="btn btn-outline btn-icon" onclick="App.toggleTheme()" title="Chuyển chế độ Sáng / Tối">
+            <i id="themeIcon" class="ri-moon-line"></i>
+          </button>
+          <button class="btn btn-outline btn-icon" onclick="App.refreshCurrentTab()" title="Làm mới dữ liệu">
+            <i class="ri-refresh-line"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <main class="page-content">
+
+        <!-- ==================== TAB 1: DASHBOARD TỔNG QUAN ==================== -->
+        <section id="tab-dashboard" class="tab-pane">
+          <div id="dashboardKpis" class="kpi-grid"></div>
+
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-line-chart-line"></i> Xu Hướng Đi Làm &amp; Tổng Giờ Làm (14 Ngày Gần Nhất)</div>
+                <span class="badge badge-primary">Thời gian thực (VN UTC+7)</span>
+              </div>
+              <div class="card-body">
+                <div class="chart-box">
+                  <canvas id="chartLast14Days"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-pie-chart-2-line"></i> Phân Bổ Giờ Làm Theo Phòng Ban</div>
+                <span id="dashMonthLabel" class="badge badge-muted">Tháng hiện tại</span>
+              </div>
+              <div class="card-body">
+                <div class="chart-box">
+                  <canvas id="chartDashDepartments"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ri-radar-line"></i> Bảng Giám Sát Ca Làm Việc Hôm Nay</div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn btn-primary btn-sm" onclick="App.openManualModal()">
+                  <i class="ri-add-line"></i> Chấm công thủ công cho nhân viên
+                </button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Nhân viên</th>
+                    <th>Phòng ban &amp; Chức vụ</th>
+                    <th>Giờ vào làm</th>
+                    <th>Giờ ra về</th>
+                    <th>Số giờ</th>
+                    <th>Trạng thái hôm nay</th>
+                    <th style="text-align:right;">Thao tác nhanh</th>
+                  </tr>
+                </thead>
+                <tbody id="todayStatusBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 2: QUẢN LÝ NHÂN VIÊN & QUẢN LÝ ==================== -->
+        <section id="tab-employees" class="tab-pane hidden">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title"><i class="ri-team-line"></i> Danh Sách Tài Khoản Nhân Viên &amp; Quản Lý</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Admin thêm mới, cập nhật thông tin, đổi vai trò, đóng/mở khóa tài khoản và quản lý thiết bị vân tay chính chủ</div>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn btn-outline admin-only" style="display:none;" onclick="App.openPositionRatesModal()">
+                  <i class="ri-scales-3-line"></i> Định Mức Lương Chức Vụ
+                </button>
+                <button id="btnAddEmployee" class="btn btn-primary admin-only" style="display:none;" onclick="App.openEmployeeModal()">
+                  <i class="ri-user-add-line"></i> Thêm Tài Khoản Nhân Sự
+                </button>
+              </div>
+            </div>
+
+            <div class="filter-bar">
+              <input type="text" id="empSearch" class="form-control search-input" placeholder="Tìm theo họ tên, username, email, SĐT..." oninput="App.loadEmployees()" />
+              <select id="empDeptFilter" class="form-control" onchange="App.loadEmployees()">
+                <option value="">Tất cả phòng ban</option>
+              </select>
+              <select id="empRoleFilter" class="form-control" onchange="App.loadEmployees()">
+                <option value="">Tất cả vai trò</option>
+                <option value="User">Nhân viên (User)</option>
+                <option value="Manager">Quản lý (Manager)</option>
+                <option value="Admin">Quản trị viên (Admin)</option>
+              </select>
+              <select id="empStatusFilter" class="form-control" onchange="App.loadEmployees()">
+                <option value="">Tất cả trạng thái</option>
+                <option value="true">Đang hoạt động</option>
+                <option value="false">Đã đóng / Khóa</option>
+              </select>
+            </div>
+
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Nhân sự</th>
+                    <th>Phòng ban / Chức vụ</th>
+                    <th>Vai trò</th>
+                    <th>Đơn giá lương giờ</th>
+                    <th>Vân tay chính chủ</th>
+                    <th>Trạng thái</th>
+                    <th style="text-align:right;">Quản lý tài khoản</th>
+                  </tr>
+                </thead>
+                <tbody id="employeesTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 3: GIÁM SÁT CHẤM CÔNG & CHẤM CÔNG THỦ CÔNG ==================== -->
+        <section id="tab-attendance" class="tab-pane hidden">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title"><i class="ri-fingerprint-2-line"></i> Nhật Ký Điểm Danh Giờ Vào / Giờ Về &amp; Chấm Công Thủ Công</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Ghi nhận thời gian vào làm, thời gian về qua vân tay và hỗ trợ Quản lý chấm công thủ công khi nhân viên quên chấm công</div>
+              </div>
+              <button class="btn btn-primary" onclick="App.openManualModal()">
+                <i class="ri-edit-2-line"></i> + Chấm Công Thủ Công
+              </button>
+            </div>
+
+            <div class="filter-bar">
+              <div>
+                <label style="font-size:11px; color:var(--text-muted); display:block;">Từ ngày</label>
+                <input type="date" id="attFromDate" class="form-control" onchange="App.loadAttendance()" />
+              </div>
+              <div>
+                <label style="font-size:11px; color:var(--text-muted); display:block;">Đến ngày</label>
+                <input type="date" id="attToDate" class="form-control" onchange="App.loadAttendance()" />
+              </div>
+              <div>
+                <label style="font-size:11px; color:var(--text-muted); display:block;">Phòng ban</label>
+                <select id="attDeptFilter" class="form-control" onchange="App.loadAttendance()">
+                  <option value="">Tất cả phòng ban</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:11px; color:var(--text-muted); display:block;">Nhân viên</label>
+                <select id="attUserFilter" class="form-control" onchange="App.loadAttendance()">
+                  <option value="">Tất cả nhân viên</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:11px; color:var(--text-muted); display:block;">Trạng thái ca</label>
+                <select id="attStatusFilter" class="form-control" onchange="App.loadAttendance()">
+                  <option value="">Tất cả trạng thái</option>
+                  <option value="Completed">Đã hoàn thành ca</option>
+                  <option value="Working">Đang trong ca làm</option>
+                  <option value="MissingCheckout">Quên Check-out (Cần chấm bù)</option>
+                  <option value="Manual">Chấm công thủ công</option>
+                </select>
+              </div>
+              <div style="flex:1; min-width:180px;">
+                <label style="font-size:11px; color:var(--text-muted); display:block;">Tìm nhanh</label>
+                <input type="text" id="attSearch" class="form-control" style="width:100%;" placeholder="Tên hoặc username..." oninput="App.loadAttendance()" />
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Ngày</th>
+                    <th>Nhân viên</th>
+                    <th>Phòng ban</th>
+                    <th>Giờ vào làm</th>
+                    <th>Giờ ra về</th>
+                    <th>Tổng giờ</th>
+                    <th>Hình thức</th>
+                    <th>Trạng thái / Ghi chú</th>
+                    <th style="text-align:right;">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="attendanceTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 4: TÍNH LƯƠNG TUẦN / THÁNG ==================== -->
+        <section id="tab-salary" class="tab-pane hidden">
+          <div class="formula-banner">
+            <div>
+              <strong><i class="ri-calculator-line"></i> Công thức tính lương theo giờ &amp; khen thưởng:</strong>
+              <span style="margin-left:6px;">Lương = (Giờ chuẩn &times; Đơn giá) + (Giờ OT &times; Đơn giá &times; 1.5) + <strong>Thưởng cống hiến/đóng góp đặc biệt</strong>.</span>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-outline btn-sm admin-only" style="display:none;" onclick="App.openPositionRatesModal()">
+                <i class="ri-scales-3-line"></i> Thang Lương Chức Vụ
+              </button>
+              <button class="btn btn-primary btn-sm admin-only" style="display:none;" onclick="App.openBonusModal()">
+                <i class="ri-gift-line"></i> Thưởng Thêm Nhân Viên
+              </button>
+              <button class="btn btn-outline btn-sm" onclick="App.exportPayrollCsv()">
+                <i class="ri-file-excel-2-line"></i> Xuất Bảng Lương (Excel)
+              </button>
+            </div>
+          </div>
+
+          <div id="salarySummaryKpis" class="kpi-grid"></div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ri-money-dollar-circle-line"></i> Bảng Tính Lương Nhân Viên Hàng Tuần / Hàng Tháng</div>
+              <div class="seg-group">
+                <button class="seg-btn active" id="salModeMonth" onclick="App.setSalaryPeriodType('Month')">Theo Tháng</button>
+                <button class="seg-btn" id="salModeWeek" onclick="App.setSalaryPeriodType('Week')">Theo Tuần</button>
+                <button class="seg-btn" id="salModeCustom" onclick="App.setSalaryPeriodType('Custom')">Tùy Chọn Ngày</button>
+              </div>
+            </div>
+
+            <div class="filter-bar">
+              <div id="salYearWrap">
+                <label style="font-size:11px; color:var(--text-muted); display:block;">Năm</label>
+                <select id="salYear" class="form-control" onchange="App.loadSalaries()"></select>
+              </div>
+              <div id="salMonthWrap">
+                <label style="font-size:11px; color:var(--text-muted); display:block;">Tháng</label>
+                <select id="salMonth" class="form-control" onchange="App.loadSalaries()"></select>
+              </div>
+              <div id="salWeekWrap" class="hidden">
+                <label style="font-size:11px; color:var(--text-muted); display:block;">Tuần ISO</label>
+                <select id="salWeek" class="form-control" onchange="App.loadSalaries()"></select>
+              </div>
+              <div id="salCustomWrap" class="hidden" style="display:flex; gap:8px;">
+                <div>
+                  <label style="font-size:11px; color:var(--text-muted); display:block;">Từ ngày</label>
+                  <input type="date" id="salFromDate" class="form-control" onchange="App.loadSalaries()" />
+                </div>
+                <div>
+                  <label style="font-size:11px; color:var(--text-muted); display:block;">Đến ngày</label>
+                  <input type="date" id="salToDate" class="form-control" onchange="App.loadSalaries()" />
+                </div>
+              </div>
+              <div>
+                <label style="font-size:11px; color:var(--text-muted); display:block;">Phòng ban</label>
+                <select id="salDeptFilter" class="form-control" onchange="App.loadSalaries()">
+                  <option value="">Tất cả phòng ban</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Nhân viên</th>
+                    <th>Phòng ban</th>
+                    <th>Số ngày làm</th>
+                    <th>Giờ chuẩn (&le;8h)</th>
+                    <th>Giờ OT (&gt;8h)</th>
+                    <th>Tổng giờ</th>
+                    <th>Đơn giá / Hệ số</th>
+                    <th>Lương chuẩn</th>
+                    <th>Lương OT</th>
+                    <th>Thưởng thêm</th>
+                    <th>Tổng thực lĩnh</th>
+                    <th style="text-align:right;">Phiếu lương / Cấu hình</th>
+                  </tr>
+                </thead>
+                <tbody id="salaryTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 5: BÁO CÁO THỐNG KÊ TUẦN/THÁNG/QUÝ/NĂM & GỬI EMAIL ==================== -->
+        <section id="tab-reports" class="tab-pane hidden">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title"><i class="ri-bar-chart-box-line"></i> Báo Cáo Thống Kê Hàng Tuần / Tháng / Quý / Năm &amp; Gửi Email</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Tổng hợp số liệu chuyên cần, biểu đồ trực quan và gửi phiếu báo cáo cá nhân qua Email đã đăng ký của từng nhân viên</div>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                <span id="emailModeBadge" class="badge badge-primary admin-only" style="display:none; cursor:pointer;" onclick="App.openEmailSettingsModal()">
+                  <i class="ri-mail-settings-line"></i> Cấu hình Email
+                </span>
+                <button class="btn btn-outline btn-sm admin-only" style="display:none;" onclick="App.openEmailSettingsModal()">
+                  <i class="ri-settings-4-line"></i> Cài Đặt SMTP Gmail
+                </button>
+                <button class="btn btn-primary btn-sm admin-only" style="display:none;" onclick="App.handleSendBulkEmail()">
+                  <i class="ri-mail-send-line"></i> Gửi Email Cho Toàn Bộ Nhân Viên
+                </button>
+              </div>
+            </div>
+
+            <div class="filter-bar">
+              <div class="seg-group">
+                <button class="seg-btn" id="repModeWeek" onclick="App.setReportPeriodType('Week')">Hàng Tuần</button>
+                <button class="seg-btn active" id="repModeMonth" onclick="App.setReportPeriodType('Month')">Hàng Tháng</button>
+                <button class="seg-btn" id="repModeQuarter" onclick="App.setReportPeriodType('Quarter')">Hàng Quý</button>
+                <button class="seg-btn" id="repModeYear" onclick="App.setReportPeriodType('Year')">Hàng Năm</button>
+              </div>
+
+              <div>
+                <select id="repYear" class="form-control" onchange="App.loadReports()"></select>
+              </div>
+              <div id="repMonthWrap">
+                <select id="repMonth" class="form-control" onchange="App.loadReports()"></select>
+              </div>
+              <div id="repQuarterWrap" class="hidden">
+                <select id="repQuarter" class="form-control" onchange="App.loadReports()">
+                  <option value="1">Quý 1 (Tháng 1 - 3)</option>
+                  <option value="2">Quý 2 (Tháng 4 - 6)</option>
+                  <option value="3">Quý 3 (Tháng 7 - 9)</option>
+                  <option value="4">Quý 4 (Tháng 10 - 12)</option>
+                </select>
+              </div>
+              <div id="repWeekWrap" class="hidden">
+                <select id="repWeek" class="form-control" onchange="App.loadReports()"></select>
+              </div>
+              <div>
+                <select id="repDeptFilter" class="form-control" onchange="App.loadReports()">
+                  <option value="">Tất cả phòng ban</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="reportKpis" class="kpi-grid"></div>
+
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-bar-chart-grouped-line"></i> Biểu Đồ Giờ Làm &amp; Lượt Điểm Danh Trong Kỳ</div>
+                <span id="repPeriodBadge" class="badge badge-primary">Kỳ báo cáo</span>
+              </div>
+              <div class="card-body">
+                <div class="chart-box">
+                  <canvas id="chartReportTimeline"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="ri-building-2-line"></i> Thống Kê Theo Phòng Ban</div>
+              </div>
+              <div class="card-body">
+                <div class="chart-box">
+                  <canvas id="chartReportDepartments"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ri-mail-check-line"></i> Bảng Tổng Hợp Từng Nhân Viên &amp; Gửi Báo Cáo Qua Email Đã Đăng Ký</div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Nhân viên</th>
+                    <th>Email đã đăng ký</th>
+                    <th>Phòng ban</th>
+                    <th>Số ngày có mặt</th>
+                    <th>Giờ chuẩn</th>
+                    <th>Giờ OT</th>
+                    <th>Tổng giờ làm</th>
+                    <th>Chấm bù</th>
+                    <th>Lương tạm tính</th>
+                    <th style="text-align:right;">Xem &amp; Gửi Báo Cáo Email</th>
+                  </tr>
+                </thead>
+                <tbody id="reportEmployeesBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 1: THÊM / CẬP NHẬT NHÂN VIÊN ==================== -->
+  <div id="employeeModal" class="modal-backdrop hidden">
+    <div class="modal-dialog" style="max-width:720px; max-height:92vh; display:flex; flex-direction:column;">
+      <div class="modal-header">
+        <h3 id="empModalTitle"><i class="ri-user-settings-line"></i> Thêm Tài Khoản Nhân Sự</h3>
+        <button class="btn btn-outline btn-icon btn-sm" onclick="App.closeModal('employeeModal')"><i class="ri-close-line"></i></button>
+      </div>
+      <form id="employeeForm" onsubmit="App.submitEmployeeForm(event)" style="display:flex; flex-direction:column; flex:1; min-height:0;">
+        <div class="modal-body" style="flex:1; min-height:0; overflow-y:auto; padding:18px 22px;">
+          <input type="hidden" id="empId" />
+
+          <div style="font-weight:700; font-size:12.5px; margin-bottom:8px; color:var(--primary); text-transform:uppercase; letter-spacing:0.4px;">
+            <i class="ri-id-card-line"></i> 1. Thông tin hồ sơ cá nhân &amp; Tài khoản
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tên đăng nhập (Username) *</label>
+              <input type="text" id="empUsername" class="form-control" placeholder="VD: nguyen.van.a" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Họ và tên đầy đủ *</label>
+              <input type="text" id="empFullName" class="form-control" placeholder="VD: Nguyễn Văn A" required />
+            </div>
+          </div>
+
+          <div class="form-row" style="grid-template-columns: 1fr 0.8fr 1.2fr;">
+            <div class="form-group">
+              <label class="form-label">Ngày/tháng/năm sinh</label>
+              <input type="date" id="empDob" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Giới tính</label>
+              <select id="empGender" class="form-control">
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+                <option value="Khác">Khác</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Số CCCD / CMND</label>
+              <input type="text" id="empCitizenId" class="form-control" placeholder="VD: 079098001234" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email *</label>
+              <input type="email" id="empEmail" class="form-control" placeholder="nhanvien@gmail.com" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Số điện thoại liên hệ</label>
+              <input type="text" id="empPhone" class="form-control" placeholder="090xxxxxxx" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Địa chỉ thường trú / liên hệ</label>
+            <input type="text" id="empAddress" class="form-control" placeholder="VD: Số 123 Nguyễn Thị Minh Khai, Quận 3, TP.HCM" />
+          </div>
+
+          <div style="margin-top:10px; padding-top:12px; border-top:1px dashed var(--border-color);">
+            <div style="font-weight:700; font-size:12.5px; margin-bottom:8px; color:var(--primary); text-transform:uppercase; letter-spacing:0.4px;">
+              <i class="ri-briefcase-4-line"></i> 2. Phòng ban, Chức vụ &amp; Định mức lương theo Chức vụ
+            </div>
+
+            <div class="form-row" style="grid-template-columns: 1fr 1fr 0.9fr;">
+              <div class="form-group">
+                <label class="form-label">Phòng ban</label>
+                <input type="text" id="empDepartment" class="form-control" list="deptSuggestions" placeholder="VD: Phòng Kỹ Thuật" />
+                <datalist id="deptSuggestions">
+                  <option value="Phòng Kỹ Thuật"></option>
+                  <option value="Phòng Kinh Doanh"></option>
+                  <option value="Phòng Marketing"></option>
+                  <option value="Phòng Nhân Sự"></option>
+                  <option value="Phòng Kế Toán"></option>
+                  <option value="Ban Giám Đốc"></option>
+                </datalist>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phân công Ca làm việc chuẩn *</label>
+                <select id="empAssignedShift" class="form-control">
+                  <option value="Ca Hành Chính (08:00 - 17:00)">Ca Hành Chính (08:00 - 17:00)</option>
+                  <option value="Ca Sáng (06:00 - 12:00)">Ca Sáng (06:00 - 12:00)</option>
+                  <option value="Ca Chiều (14:00 - 22:00)">Ca Chiều (14:00 - 22:00)</option>
+                  <option value="Ca Tối (18:00 - 22:00)">Ca Tối (18:00 - 22:00)</option>
+                  <option value="Xoay ca linh hoạt">Xoay ca linh hoạt (Được chọn mọi ca)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ngày vào làm</label>
+                <input type="date" id="empHireDate" class="form-control" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Mẫu cấp bậc gợi ý (Tự động điền lương &amp; vai trò)</label>
+                <select id="empPositionPreset" class="form-control" onchange="App.onPositionPresetChange()">
+                  <option value="Thực Tập Sinh (Intern)|35000|User">Thực Tập Sinh (Intern) — 35.000 đ/giờ</option>
+                  <option value="Nhân Viên Thử Việc|42000|User">Nhân Viên Thử Việc — 42.000 đ/giờ</option>
+                  <option value="Nhân Viên Chính Thức|55000|User" selected>Nhân Viên Chính Thức — 55.000 đ/giờ</option>
+                  <option value="Chuyên Viên Cao Cấp (Senior)|75000|User">Chuyên Viên Cao Cấp (Senior) — 75.000 đ/giờ</option>
+                  <option value="Trưởng Nhóm (Team Lead)|90000|User">Trưởng Nhóm (Team Lead) — 90.000 đ/giờ</option>
+                  <option value="Trưởng Phòng / Quản Lý|110000|Manager">Trưởng Phòng / Quản Lý — 110.000 đ/giờ</option>
+                  <option value="Giám Đốc Điều Hành|150000|Admin">Giám Đốc Điều Hành — 150.000 đ/giờ</option>
+                  <option value="custom">Tự nhập chức vụ riêng (Không dùng mẫu)...</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tên chức vụ công việc hiển thị *</label>
+                <input type="text" id="empPosition" class="form-control" value="Nhân Viên Chính Thức" placeholder="VD: Lập trình viên Backend / Kế toán..." required />
+              </div>
+            </div>
+
+            <div class="form-row" style="grid-template-columns: 1.3fr 1fr 1fr;">
+              <div class="form-group">
+                <label class="form-label">Đơn giá lương (VNĐ/giờ) *</label>
+                <input type="number" id="empHourlyRate" class="form-control" value="55000" min="1000" step="1000" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Hệ số Tăng ca (OT)</label>
+                <input type="number" id="empOtMultiplier" class="form-control" value="1.5" min="1" max="5" step="0.1" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Giờ chuẩn/ngày</label>
+                <input type="number" id="empStdHours" class="form-control" value="8" min="1" max="24" step="0.5" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Vai trò phân quyền hệ thống *</label>
+                <select id="empRole" class="form-control">
+                  <option value="User">Nhân viên (Điểm danh trên App di động)</option>
+                  <option value="Manager">Quản lý (Chấm công bù &amp; Xem báo cáo)</option>
+                  <option value="Admin">Quản trị viên (Toàn quyền hệ thống)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label id="empPasswordLabel" class="form-label">Mật khẩu khởi tạo *</label>
+                <input type="password" id="empPassword" class="form-control" placeholder="Tối thiểu 6 ký tự (có chữ số)" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="flex-shrink:0; background:var(--bg-elevated); padding:14px 22px; border-top:1px solid var(--border-color); display:flex; justify-content:flex-end; gap:12px;">
+          <button type="button" class="btn btn-outline" style="min-width:105px; padding:9px 18px; font-weight:700;" onclick="App.closeModal('employeeModal')">Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary" style="min-width:150px; padding:9px 22px; font-weight:700;"><i class="ri-save-line"></i> Lưu Thông Tin</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: CHẤM CÔNG THỦ CÔNG ==================== -->
+  <div id="manualModal" class="modal-backdrop hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="manModalTitle"><i class="ri-edit-box-line"></i> Quản Lý Chấm Công Thủ Công Cho Nhân Viên</h3>
+        <button class="btn btn-outline btn-icon btn-sm" onclick="App.closeModal('manualModal')"><i class="ri-close-line"></i></button>
+      </div>
+      <form id="manualForm" onsubmit="App.submitManualAttendance(event)">
+        <div class="modal-body">
+          <div id="manRecordInfoBanner" class="hidden" style="background:var(--primary-soft); border:1px solid rgba(14,165,233,0.3); border-radius:10px; padding:12px 14px; margin-bottom:16px;"></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Chọn nhân viên cần chấm công *</label>
+              <select id="manUserId" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ca làm việc *</label>
+              <select id="manShiftName" class="form-control" onchange="App.onManualShiftChange()">
+                <option value="Ca Hành Chính (08:00 - 17:00)">Ca Hành Chính (08:00 - 17:00)</option>
+                <option value="Ca Sáng (06:00 - 12:00)">Ca Sáng (06:00 - 12:00)</option>
+                <option value="Ca Chiều (14:00 - 22:00)">Ca Chiều (14:00 - 22:00)</option>
+                <option value="Ca Tối (18:00 - 22:00)">Ca Tối (18:00 - 22:00)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Ngày chấm công *</label>
+              <input type="date" id="manDate" class="form-control" onchange="App.previewManualHours()" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tùy chọn bản ghi</label>
+              <select id="manOverride" class="form-control">
+                <option value="true">Ghi đè / Cập nhật nếu ngày đó đã có</option>
+                <option value="false">Chỉ thêm mới (báo lỗi nếu đã tồn tại)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Giờ vào làm (Check-in) *</label>
+              <input type="time" id="manCheckIn" class="form-control" value="08:00" onchange="App.previewManualHours()" oninput="App.previewManualHours()" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Giờ ra về (Check-out) *</label>
+              <input type="time" id="manCheckOut" class="form-control" value="17:00" onchange="App.previewManualHours()" oninput="App.previewManualHours()" required />
+            </div>
+          </div>
+
+          <div id="manHoursPreview" style="background:var(--primary-soft); color:var(--primary); padding:10px 14px; border-radius:10px; font-weight:700; font-size:13px; margin-bottom:14px;">
+            Tổng thời gian ca làm việc: 8.0 giờ (8.0h tiêu chuẩn - Đủ công, Hoàn thành ca • 0h OT)
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Lý do chấm công thủ công *</label>
+            <input type="text" id="manReason" class="form-control" placeholder="VD: Nhân viên quên check-out / Đi công tác gặp khách hàng / Cảm biến lỗi..." required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="App.closeModal('manualModal')">Đóng</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-check-double-line"></i> Xác Nhận Chấm Công</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 3: CHI TIẾT PHIẾU LƯƠNG / XEM TRƯỚC EMAIL HTML ==================== -->
+  <div id="previewModal" class="modal-backdrop hidden">
+    <div class="modal-dialog modal-lg" style="width:94vw; max-width:1000px; height:90vh; max-height:92vh;">
+      <div class="modal-header">
+        <h3 id="previewModalTitle"><i class="ri-mail-open-line"></i> Xem Trước Phiếu Báo Cáo &amp; Bảng Lương</h3>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn btn-outline btn-sm" onclick="App.printPreviewFrame()"><i class="ri-printer-line"></i> In / Lưu PDF</button>
+          <button type="button" class="btn btn-outline btn-icon btn-sm" onclick="App.closeModal('previewModal')"><i class="ri-close-line"></i></button>
+        </div>
+      </div>
+      <div class="modal-body" style="padding:0; flex:1; min-height:0; background:#f1f5f9;">
+        <iframe id="previewIframe" style="width:100%; height:100%; min-height:80vh; border:none; display:block;"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 4: CẤU HÌNH EMAIL SMTP / MÔ PHỎNG ==================== -->
+  <div id="emailSettingsModal" class="modal-backdrop hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="ri-mail-settings-line"></i> Cấu Hình Gửi Email Báo Cáo (Gmail SMTP / Mô Phỏng)</h3>
+        <button class="btn btn-outline btn-icon btn-sm" onclick="App.closeModal('emailSettingsModal')"><i class="ri-close-line"></i></button>
+      </div>
+      <form onsubmit="App.submitEmailSettings(event)">
+        <div class="modal-body">
+          <div style="background:var(--primary-soft); padding:12px 14px; border-radius:10px; font-size:12.5px; margin-bottom:16px; line-height:1.55;">
+            <strong>Cơ chế hoạt động thông minh (Dual-Mode):</strong><br/>
+            1. <strong>Chế độ Mô phỏng (Mặc định):</strong> Nếu để trống Mật khẩu ứng dụng Gmail, hệ thống tự động kết xuất phiếu báo cáo HTML chuẩn và mở ngay trên màn hình (không bao giờ bị lỗi SMTP khi demo).<br/>
+            2. <strong>Chế độ Gửi Gmail thật:</strong> Nhập Gmail công ty + Mật khẩu ứng dụng 16 ký tự (Google App Password) để gửi thẳng vào hộp thư Gmail thật của nhân viên.
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Máy chủ SMTP</label>
+              <input type="text" id="smtpServer" class="form-control" value="smtp.gmail.com" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cổng (Port)</label>
+              <input type="number" id="smtpPort" class="form-control" value="587" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tên hiển thị người gửi</label>
+            <input type="text" id="smtpSenderName" class="form-control" value="Hệ thống Nhân sự & Chấm công" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Địa chỉ Gmail gửi đi</label>
+              <input type="email" id="smtpUsername" class="form-control" placeholder="fup3569@gmail.com" value="fup3569@gmail.com" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gmail App Password (16 ký tự)</label>
+              <input type="password" id="smtpPassword" class="form-control" placeholder="Để trống nếu dùng chế độ Mô phỏng" value="lfok lcvv rpur hklk" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="App.closeModal('emailSettingsModal')">Đóng</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-save-line"></i> Lưu Cấu Hình</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 5: XEM ANH SELFIE XAC THUC ==================== -->
+  <div id="proofPhotoModal" class="modal-backdrop hidden" onclick="if(event.target === this) App.closeModal('proofPhotoModal')">
+    <div class="modal-dialog" style="max-width:480px; text-align:center;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="ri-camera-lens-line" style="color:var(--primary);"></i> Ảnh Selfie Điểm Danh Khoảnh Khắc Vào Ca</h3>
+        <button type="button" class="btn btn-outline btn-icon btn-sm" onclick="App.closeModal('proofPhotoModal')" title="Đóng"><i class="ri-close-line"></i></button>
+      </div>
+      <div class="modal-body" style="padding:20px;">
+        <div style="border-radius:14px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,0.18); background:#111; margin-bottom:14px;">
+          <img id="modalProofImg" src="" alt="Selfie Proof" style="width:100%; max-height:480px; object-fit:contain; display:block;" />
+        </div>
+        <div id="modalProofDetails" style="font-size:13px; color:var(--text-main); font-weight:600; line-height:1.6;"></div>
+      </div>
+      <div class="modal-footer" style="justify-content:center; gap:10px;">
+        <a id="modalProofLink" href="#" target="_blank" class="btn btn-outline btn-sm">
+          <i class="ri-external-link-line"></i> Mở ảnh kích thước gốc
+        </a>
+        <button type="button" class="btn btn-primary btn-sm" onclick="App.closeModal('proofPhotoModal')">
+          <i class="ri-check-line"></i> Đã Đối Soát Xong
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 6: QUẢN LÝ THANG LƯƠNG CHỨC VỤ ==================== -->
+  <div id="positionRatesModal" class="modal-backdrop hidden">
+    <div class="modal-dialog" style="max-width:760px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="ri-scales-3-line" style="color:var(--primary);"></i> Thang Bảng Lương Định Mức Theo Chức Vụ</h3>
+        <button type="button" class="btn btn-outline btn-icon btn-sm" onclick="App.closeModal('positionRatesModal')" title="Đóng"><i class="ri-close-line"></i></button>
+      </div>
+      <div class="modal-body" style="padding:20px;">
+        <div style="background:var(--primary-soft); padding:12px 14px; border-radius:10px; font-size:12.5px; margin-bottom:16px; line-height:1.55;">
+          <strong>Chính sách lương theo chức danh:</strong> Admin có thể tùy chỉnh đơn giá giờ cho từng chức vụ (ví dụ: Chuyên viên cao cấp từ 75k &rarr; 80k). Bấm <strong>"Lưu &amp; Đồng bộ"</strong> để hệ thống tự động cập nhật mức lương mới cho toàn bộ nhân viên đang giữ chức vụ đó!
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tên Chức Vụ / Vị Trí</th>
+                <th style="width:180px;">Đơn Giá Lương (VNĐ/giờ)</th>
+                <th style="width:130px;">Vai Trò</th>
+                <th style="text-align:right; width:140px;">Hành Động</th>
+              </tr>
+            </thead>
+            <tbody id="positionRatesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="App.closeModal('positionRatesModal')">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 7: KHEN THƯỞNG THÊM & ĐÓNG GÓP ĐẶC BIỆT ==================== -->
+  <div id="bonusModal" class="modal-backdrop hidden">
+    <div class="modal-dialog" style="max-width:520px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="ri-gift-line" style="color:var(--primary);"></i> Khen Thưởng Thêm &amp; Ghi Nhận Đóng Góp</h3>
+        <button type="button" class="btn btn-outline btn-icon btn-sm" onclick="App.closeModal('bonusModal')" title="Đóng"><i class="ri-close-line"></i></button>
+      </div>
+      <form onsubmit="App.submitBonusForm(event)">
+        <div class="modal-body" style="padding:20px;">
+          <div style="background:rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); padding:10px 14px; border-radius:10px; font-size:12.5px; margin-bottom:16px; color:var(--text-main);">
+            ⭐ <strong>Thưởng cống hiến / Thưởng dự án:</strong> Khoản tiền thưởng này sẽ được cộng trực tiếp vào bảng lương tháng, hiển thị trên ứng dụng của nhân viên và bản tổng kết <strong>Nova Wrapped</strong>!
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Chọn Nhân Viên Được Thưởng *</label>
+            <select id="bonusUserId" class="form-control" required></select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Năm *</label>
+              <input type="number" id="bonusYear" class="form-control" value="2026" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tháng *</label>
+              <select id="bonusMonth" class="form-control" required>
+                <option value="1">Tháng 1</option>
+                <option value="2">Tháng 2</option>
+                <option value="3">Tháng 3</option>
+                <option value="4">Tháng 4</option>
+                <option value="5">Tháng 5</option>
+                <option value="6">Tháng 6</option>
+                <option value="7">Tháng 7</option>
+                <option value="8">Tháng 8</option>
+                <option value="9">Tháng 9</option>
+                <option value="10" selected>Tháng 10</option>
+                <option value="11">Tháng 11</option>
+                <option value="12">Tháng 12</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Số Tiền Thưởng Thêm (VNĐ) *</label>
+            <input type="number" id="bonusAmount" class="form-control" placeholder="Ví dụ: 1000000" min="0" step="50000" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Lý Do / Thành Tích Được Thưởng *</label>
+            <input type="text" id="bonusReason" class="form-control" placeholder="VD: Thưởng dự án hoàn thành xuất sắc / Đóng góp đặc biệt" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="App.closeModal('bonusModal')">Hủy</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-check-line"></i> Lưu Tiền Thưởng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Custom Confirmation Dialog (Không dùng popup localhost mặc định) -->
+  <div id="appConfirmModal" class="modal-backdrop hidden" style="z-index: 99999;">
+    <div class="modal-dialog">
+      <div style="padding: 28px 24px 20px 24px; text-align: center;">
+        <div id="confirmIconWrapper" style="width: 62px; height: 62px; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 30px; transition: all 0.25s ease;">
+          <i id="confirmIcon" class="ri-alert-line"></i>
+        </div>
+        <h3 id="confirmTitle" style="font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 10px; letter-spacing: -0.01em;">Xác Nhận Thao Tác</h3>
+        <div id="confirmMessage" style="font-size: 14px; color: var(--text-muted, #94a3b8); line-height: 1.6; word-break: break-word;">
+          Nội dung xác nhận...
+        </div>
+      </div>
+      <div style="padding: 14px 20px; display: flex; gap: 10px; justify-content: flex-end; background: rgba(15, 23, 42, 0.45); border-top: 1px solid rgba(255,255,255,0.06);">
+        <button id="confirmCancelBtn" type="button" class="btn btn-outline" style="min-width: 100px; padding: 9px 18px; font-weight: 600; border-radius: 10px;">
+          Hủy bỏ
+        </button>
+        <button id="confirmOkBtn" type="button" class="btn btn-primary" style="min-width: 110px; padding: 9px 18px; font-weight: 600; border-radius: 10px;">
+          <i class="ri-check-line"></i> Xác nhận
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+  <script src="/js/xlsx.full.min.js"></script>
+  <script src="/js/app.js?v=20261027_05"></script>
+</body>
+</html>
